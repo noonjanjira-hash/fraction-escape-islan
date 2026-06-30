@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>สำรวจเกาะเศษส่วนมหาสมบัติ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;800&family=Prompt:wght@400;500;700&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+    <!-- START SCREEN -->
+    <section id="startScreen" class="screen active island-bg">
+      <div class="floating-cloud cloud-a"></div>
+      <div class="floating-cloud cloud-b"></div>
+      <div class="hero-card">
+        <div class="badge">🏝️ Fraction Adventure</div>
+        <h1>สำรวจเกาะ<br>เศษส่วนมหาสมบัติ</h1>
+        <p>เรียงเศษส่วนให้ถูกต้อง ค้นหากุญแจ และพาเรือออกจากเกาะ!</p>
+        <button class="primary-btn" id="startBtn">▶ เริ่มสำรวจเกาะ</button>
+        <button class="secondary-btn" id="howBtn">วิธีเล่น</button>
+      </div>
+      <div class="ship ship-start">⛵</div>
+      <div class="treasure">💰</div>
+    </section>
+
+    <!-- HOW TO PLAY -->
+    <section id="howScreen" class="screen island-bg">
+      <div class="panel wide">
+        <h2>วิธีเล่น</h2>
+        <div class="steps">
+          <div><b>1</b><span>ลากการ์ดเศษส่วน</span></div>
+          <div><b>2</b><span>เรียงจากน้อยไปมาก</span></div>
+          <div><b>3</b><span>กดตรวจคำตอบ</span></div>
+          <div><b>4</b><span>สะสมกุญแจให้ครบ 10 ดอก</span></div>
+        </div>
+        <p class="teacher-note">เหมาะสำหรับทบทวนหลังเรียน เล่นเดี่ยวหรือเปิดขึ้นจอให้เด็กช่วยกันตอบเป็นทีมได้</p>
+        <button class="primary-btn" id="howStartBtn">เริ่มเกม</button>
+        <button class="secondary-btn" id="backStartBtn">กลับหน้าแรก</button>
+      </div>
+    </section>
+
+    <!-- MAP SCREEN -->
+    <section id="mapScreen" class="screen map-bg">
+      <header class="topbar">
+        <div>🔑 <span id="keyCount">0</span>/10</div>
+        <div>⭐ <span id="scoreMap">0</span></div>
+        <button class="small-btn" id="resetBtn">เริ่มใหม่</button>
+      </header>
+
+      <div class="map-title">
+        <h2>แผนที่เกาะเศษส่วน</h2>
+        <p>ผ่านภารกิจเพื่อปลดล็อกเส้นทางสู่ท่าเรืออิสรภาพ</p>
+      </div>
+
+      <div class="map-path" id="mapPath"></div>
+
+      <div class="map-actions">
+        <button class="primary-btn" id="playCurrentBtn">เล่นภารกิจปัจจุบัน</button>
+      </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="gameScreen" class="screen game-bg">
+      <header class="game-header">
+        <button class="small-btn" id="toMapBtn">← แผนที่</button>
+        <div class="level-info">
+          <div id="levelTitle">ภารกิจที่ 1</div>
+          <small id="levelPlace">ชายหาดเริ่มต้น</small>
+        </div>
+        <div class="timer-wrap">
+          <div id="timerCircle" class="timer-circle"><span id="timerText">60</span></div>
+        </div>
+      </header>
+
+      <div class="score-row">
+        <span>⭐ คะแนน: <b id="scoreGame">0</b></span>
+        <span>🔑 กุญแจ: <b id="keysGame">0</b>/10</span>
+      </div>
+
+      <section class="mission-card">
+        <h2>ลากกุญแจเศษส่วนมาเรียงจากน้อยไปมาก</h2>
+        <p id="missionHintText">เติมช่องให้เป็นลำดับ: น้อยที่สุด → มากที่สุด</p>
+
+        <div id="fractionBank" class="fraction-bank" aria-label="การ์ดเศษส่วน"></div>
+
+        <div class="slots-wrap">
+          <div id="dropSlots" class="drop-slots"></div>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div class="game-actions">
+          <button class="primary-btn" id="checkBtn">ตรวจคำตอบ</button>
+          <button class="secondary-btn" id="hintBtn">💡 คำใบ้ (-2)</button>
+          <button class="secondary-btn" id="shuffleBtn">สุ่มใหม่</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- END SCREEN -->
+    <section id="endScreen" class="screen victory-bg">
+      <div class="panel wide end-panel">
+        <div class="fireworks">🎆 🎇 🎆</div>
+        <h1>ภารกิจสำเร็จ!</h1>
+        <p>คุณคือผู้พิชิตเกาะเศษส่วน</p>
+        <div class="result-grid">
+          <div><b id="finalScore">0</b><span>คะแนนรวม</span></div>
+          <div><b id="finalHints">0</b><span>คำใบ้ที่ใช้</span></div>
+          <div><b id="finalRank">นักสำรวจ</b><span>ระดับผู้เล่น</span></div>
+        </div>
+        <button class="primary-btn" id="playAgainBtn">เล่นใหม่</button>
+      </div>
+      <div class="ship victory-ship">⛵</div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

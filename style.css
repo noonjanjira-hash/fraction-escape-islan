@@ -1,0 +1,236 @@
+/* =========================================================
+   Fraction Escape Island
+   Educational Web Game for Thai elementary math class
+   ========================================================= */
+
+:root{
+  --sea:#1fa7c9;
+  --deep:#0b5d78;
+  --sky:#8ee7ff;
+  --sand:#ffe09a;
+  --gold:#ffc533;
+  --wood:#8b5527;
+  --green:#31b96b;
+  --red:#ef4b4b;
+  --purple:#6b4bd8;
+  --ink:#18324a;
+  --card:#fff8df;
+  --shadow: 0 14px 35px rgba(0,0,0,.20);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"Prompt",system-ui,sans-serif;color:var(--ink);overflow:hidden}
+button{font-family:"Kanit",sans-serif;border:none;cursor:pointer}
+.screen{
+  position:absolute; inset:0;
+  display:none;
+  padding:18px;
+  overflow:hidden;
+}
+.screen.active{display:flex}
+
+.island-bg,.game-bg,.map-bg,.victory-bg{
+  background:
+    radial-gradient(circle at 75% 15%, rgba(255,255,255,.75) 0 8%, transparent 9%),
+    linear-gradient(#80e8ff 0 42%, #20a6ca 43% 72%, #ffe6a4 72% 100%);
+}
+.map-bg{
+  background:
+    radial-gradient(circle at 50% 44%, #69c36d 0 24%, #36a968 25% 37%, transparent 38%),
+    linear-gradient(#8ee7ff 0 42%, #1fa7c9 42% 100%);
+}
+.game-bg{
+  background:
+    radial-gradient(circle at 50% 82%, #ffd98a 0 24%, transparent 25%),
+    linear-gradient(#8ee7ff 0 35%, #1fa7c9 35% 100%);
+}
+.victory-bg{
+  background:linear-gradient(#23245f 0%, #53328f 45%, #ffb347 100%);
+}
+
+.hero-card,.panel,.mission-card{
+  background:rgba(255,248,223,.94);
+  border:5px solid #fff2b8;
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(5px);
+}
+
+.hero-card{
+  width:min(720px,92vw);
+  margin:auto;
+  padding:30px 24px;
+  text-align:center;
+  z-index:3;
+}
+.badge{
+  display:inline-block;
+  background:var(--gold);
+  color:#65400b;
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:800;
+  box-shadow:0 5px 0 #c98d17;
+}
+h1,h2{font-family:"Kanit",sans-serif;margin:.25em 0;line-height:1.05}
+.hero-card h1{font-size:clamp(2.3rem,8vw,5rem);color:#0d5b77;text-shadow:3px 4px 0 #fff}
+.hero-card p{font-size:clamp(1.05rem,3vw,1.45rem);font-weight:600}
+
+.primary-btn,.secondary-btn,.small-btn{
+  border-radius:18px;
+  padding:14px 22px;
+  font-size:1.1rem;
+  margin:6px;
+  box-shadow:0 6px 0 rgba(0,0,0,.22);
+  transition:.15s transform,.15s filter;
+}
+.primary-btn{background:linear-gradient(#ffdb58,#ffab21);color:#593700}
+.secondary-btn{background:#ffffff;color:#0b5d78;border:3px solid #68c9dd}
+.small-btn{background:#fff;color:#0b5d78;padding:9px 13px;border:2px solid #68c9dd;font-size:.9rem}
+button:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+
+.ship,.treasure{
+  position:absolute;
+  font-size:clamp(4rem,10vw,7rem);
+  filter:drop-shadow(0 10px 8px rgba(0,0,0,.25));
+}
+.ship-start{left:8%;bottom:24%;animation:float 3s ease-in-out infinite}
+.treasure{right:10%;bottom:8%;animation:bounce 2s ease-in-out infinite}
+.floating-cloud{
+  position:absolute; width:130px;height:55px;background:#fff;border-radius:50px;opacity:.85;
+}
+.floating-cloud:before,.floating-cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.floating-cloud:before{width:70px;height:70px;left:18px;top:-30px}
+.floating-cloud:after{width:90px;height:80px;right:10px;top:-38px}
+.cloud-a{top:12%;left:10%;animation:cloud 22s linear infinite}
+.cloud-b{top:21%;right:4%;animation:cloud 28s linear infinite reverse}
+
+.panel{
+  width:min(900px,95vw);
+  margin:auto;
+  padding:26px;
+  text-align:center;
+  z-index:3;
+}
+.panel h2{font-size:clamp(2rem,5vw,3.5rem);color:#0b5d78}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.steps div{background:#fff;border-radius:20px;padding:14px;border:3px solid #f4c64b}
+.steps b{display:block;background:var(--green);color:#fff;width:42px;height:42px;border-radius:50%;line-height:42px;margin:0 auto 8px;font-size:1.4rem}
+.teacher-note{font-weight:600}
+
+.topbar,.game-header{
+  position:absolute;left:16px;right:16px;top:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  z-index:5;
+}
+.topbar>div,.score-row span{
+  background:#fff8df;border:3px solid #fff2b8;border-radius:16px;padding:8px 14px;font-family:"Kanit";font-size:1.1rem;
+}
+.map-title{text-align:center;margin-top:54px;color:#06394f;text-shadow:1px 2px 0 rgba(255,255,255,.6);width:100%}
+.map-title h2{font-size:clamp(2rem,5vw,3.8rem)}
+.map-title p{font-weight:700;margin-top:-8px}
+
+.map-path{
+  position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);
+  width:min(980px,94vw);height:min(520px,58vh);
+}
+.map-node{
+  position:absolute;
+  width:88px;height:88px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  background:#d7d7d7;border:5px solid #fff;box-shadow:var(--shadow);
+  font-family:"Kanit";font-weight:800;text-align:center;
+  transform:translate(-50%,-50%);
+  transition:.25s;
+}
+.map-node span:first-child{font-size:1.7rem}
+.map-node small{font-size:.62rem;line-height:1.05;max-width:78px}
+.map-node.done{background:linear-gradient(#ffe66c,#ffb21b)}
+.map-node.current{background:linear-gradient(#78ef9e,#22b85a);animation:pulse 1s infinite}
+.map-actions{position:absolute;bottom:22px;left:0;right:0;text-align:center}
+
+.game-header{background:rgba(255,255,255,.45);padding:7px;border-radius:20px}
+.level-info{text-align:center;font-family:"Kanit";font-weight:800;color:#05364c;background:#fff8df;border-radius:18px;padding:7px 18px;border:3px solid #fff2b8;min-width:210px}
+.level-info small{display:block;font-family:"Prompt";font-weight:700}
+.timer-circle{
+  width:64px;height:64px;border-radius:50%;
+  background:conic-gradient(var(--green) 360deg, #eee 0deg);
+  display:grid;place-items:center;border:4px solid #fff;box-shadow:var(--shadow);
+}
+.timer-circle span{font-family:"Baloo 2";font-size:1.55rem;color:#07364b}
+.score-row{
+  position:absolute;left:16px;right:16px;top:93px;
+  display:flex;justify-content:center;gap:12px;z-index:4;
+}
+.mission-card{
+  width:min(1000px,96vw);
+  margin:auto;
+  margin-top:70px;
+  padding:18px;
+  text-align:center;
+  z-index:3;
+}
+.mission-card h2{font-size:clamp(1.35rem,3vw,2.3rem);color:#0b5d78}
+#missionHintText{font-weight:700;margin-top:-4px}
+.fraction-bank,.drop-slots{
+  display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:14px auto;
+}
+.fraction-card{
+  width:112px;height:118px;border-radius:20px;
+  background:linear-gradient(#fffdf1,#ffe8a5);
+  border:4px solid #bd7d25;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Baloo 2";font-size:2.35rem;font-weight:800;color:#3a2512;
+  box-shadow:0 8px 0 #8b5527, 0 12px 20px rgba(0,0,0,.18);
+  user-select:none;touch-action:none;
+}
+.fraction-card.dragging{opacity:.6;transform:scale(1.05)}
+.slot{
+  width:122px;height:128px;border-radius:22px;
+  border:4px dashed #0b5d78;background:rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.slot:after{
+  content:"<";position:absolute;right:-19px;font-family:"Kanit";font-size:2rem;color:#0b5d78;
+}
+.slot:last-child:after{content:""}
+.slot.correct{border-color:var(--green);box-shadow:0 0 18px rgba(49,185,107,.8)}
+.slot.wrong{border-color:var(--red);animation:shake .35s}
+.feedback{
+  min-height:35px;
+  font-family:"Kanit";font-size:1.2rem;font-weight:800;
+}
+.feedback.good{color:var(--green)}
+.feedback.bad{color:var(--red)}
+.feedback.info{color:var(--purple)}
+.game-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+
+.end-panel h1{font-size:clamp(2.4rem,7vw,5rem);color:#0b5d78}
+.fireworks{font-size:3rem;animation:bounce 1.5s infinite}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.result-grid div{background:#fff;border:3px solid #f4c64b;border-radius:20px;padding:16px}
+.result-grid b{display:block;font-family:"Baloo 2";font-size:2rem;color:#0b5d78}
+.result-grid span{font-weight:700}
+.victory-ship{left:10%;bottom:12%;animation:sail 6s linear infinite}
+
+@keyframes float{50%{transform:translateY(-12px)}}
+@keyframes bounce{50%{transform:translateY(-10px) scale(1.04)}}
+@keyframes cloud{from{transform:translateX(-40px)}to{transform:translateX(60px)}}
+@keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.12)}}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes sail{from{transform:translateX(0)}to{transform:translateX(75vw)}}
+
+@media (max-width:760px){
+  .steps{grid-template-columns:1fr 1fr}
+  .fraction-card{width:86px;height:94px;font-size:1.9rem;border-radius:16px}
+  .slot{width:94px;height:102px;border-radius:16px}
+  .slot:after{right:-15px;font-size:1.5rem}
+  .mission-card{padding:12px;margin-top:88px}
+  .score-row{top:92px}
+  .map-node{width:72px;height:72px}
+  .map-node small{font-size:.52rem;max-width:64px}
+  .result-grid{grid-template-columns:1fr}
+  .game-actions button{padding:10px 13px;font-size:.95rem}
+}
